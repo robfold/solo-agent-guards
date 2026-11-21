@@ -1,0 +1,10 @@
+{
+  "name": "solo-agent-guards",
+  "version": "0.1.0",
+  "description": "Stop a coding agent from saying \"done\" when it isn't: prove the test catches the bug, and prove the push landed.",
+  "author": {
+    "name": "Rob"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/robfold/solo-agent-guards"
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "solo-agent-guards",
+  "description": "Guards for running a coding agent alone: prove the test catches the bug, and prove the push landed.",
+  "owner": {
+    "name": "Rob"
+  },
+  "plugins": [
+    {
+      "name": "solo-agent-guards",
+      "description": "test-and-prove breaks the guard to show a test catches it. change-integrity checks that only your changes went up and actually landed.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
