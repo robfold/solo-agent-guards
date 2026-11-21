@@ -10,6 +10,7 @@
 
 - **[`test-and-prove`](skills/test-and-prove/SKILL.md): 테스트가 통과했다고 아직 증명된 것은 없습니다.** 에이전트는 테스트가 지키는 가드를 빼고, 그 테스트만 돌려 실패하는지 보고, 가드를 되돌립니다. 그래도 초록이면 그 테스트는 아무것도 지키지 않으므로 다시 씁니다. 에이전트는 exit code가 아니라 실행 건수를 읽습니다. `go test -run X`와 `jest -t X`는 아무것도 돌지 않아도 0으로 끝나기 때문입니다.
 - **[`change-integrity`](skills/change-integrity/SKILL.md): push가 성공했다고 아직 증명된 것은 없습니다.** 에이전트는 원격 SHA, 기준 브랜치와의 세 점 diff, PR·MR에 실제로 담긴 변경을 확인합니다. 자기가 바꾼 경로만 스테이징하고, 다른 세션의 미완성 작업은 건드리지 않습니다.
+- **[`claim-audit`](skills/claim-audit/SKILL.md): 성공 문구가 떴다고 아직 증명된 것은 없습니다.** 에이전트는 「머지됐다」「배포됐다」「통과」「운영에서 돈다」나 실적 숫자를 보고하기 전에 대상을 다시 읽고 네 틈을 막습니다. 예약만 된 머지, 한 번도 실패해 본 적 없는 검사, 자기 시험 접속이 섞인 숫자, 운영 상태로 둔갑한 수동 실행입니다. 남이 만든 일을 이어받기 전에는 카드 상태가 아니라 검수자의 마지막 판정을 읽습니다.
 
 ## 이렇게 보고합니다
 
@@ -27,7 +28,11 @@
 
 > push는 성공했지만 `git diff --stat origin/main...origin/fix-refund`에 파일이 3개 보이고, 제가 바꾼 것은 2개입니다. `config/billing.yml`은 다른 세션의 미완성 작업입니다. `origin/main`에서 제 커밋만으로 브랜치를 다시 만들어 `fix-refund-2`로 push했습니다. 새 PR에는 파일 2개만 보입니다.
 
-<sub>`test-and-prove` 보고는 녹화에서 옮겼습니다. `change-integrity` 보고는 이름을 지어낸 예시입니다.</sub>
+`claim-audit`를 쓰면 도구가 찍은 문구가 아니라 증거가 닿은 만큼만 보고합니다.
+
+> MR !42는 아직 머지되지 않았습니다. `glab mr merge`는 "Merged!"를 찍었지만 API는 `state: opened`, `merge_when_pipeline_succeeds: true`, `merge_commit_sha: null`입니다. CI가 통과하면 머지되도록 예약만 걸린 상태입니다. 인용 검사는 3/3 통과라고 하지만, 아무것도 인용하지 않은 영수증도 통과시킵니다. 검사가 고장 났습니다. 손으로 고쳐 다시 세면 2/3입니다. 어제 결제 7건 중 4건은 curl·python-requests에서 온 mock 결제이고 1건은 내부 QA 계정이라, 고객으로 보이는 것은 2건입니다.
+
+<sub>`test-and-prove` 보고는 녹화에서 옮겼습니다. `change-integrity` 보고는 이름을 지어낸 예시입니다. `claim-audit` 보고는 함정을 심은 작은 예시 프로젝트에서 시험한 결과를 줄였습니다.</sub>
 
 ## 설치
 
@@ -48,20 +53,20 @@ npx skills add robfold/solo-agent-guards
 
 ## 쓰는 법
 
-요청이 맞으면 스킬이 알아서 켜집니다. `test-and-prove`는 테스트·커버리지·플레이크 수정을 요청할 때 켜집니다. `change-integrity`는 커밋·push·PR·MR을 요청할 때 켜집니다. 이름으로 부를 수도 있습니다. 예: "환불 검사 테스트를 짜고 증명까지 해".
+요청이 맞으면 스킬이 알아서 켜집니다. `test-and-prove`는 테스트·커버리지·플레이크 수정을 요청할 때 켜집니다. `change-integrity`는 커밋·push·PR·MR을 요청할 때 켜집니다. `claim-audit`는 에이전트가 상태나 실적 숫자를 보고하기 직전, 그리고 「진짜야?」라고 물을 때 켜집니다. 이름으로 부를 수도 있습니다. 예: "환불 검사 테스트를 짜고 증명까지 해".
 
-`test-and-prove`는 실행기가 찍은 숫자 그대로와, 새 테스트마다 가드를 부순 결과로 끝납니다. `change-integrity`는 원격 SHA와 PR·MR에 실제로 담긴 diff로 끝납니다.
+`test-and-prove`는 실행기가 찍은 숫자 그대로와, 새 테스트마다 가드를 부순 결과로 끝납니다. `change-integrity`는 원격 SHA와 PR·MR에 실제로 담긴 diff로 끝납니다. `claim-audit`는 주장마다 어디서 다시 읽었는지, 또는 읽지 못했는지를 붙여 끝납니다.
 
 ## 다른 스킬이 맞을 때
 
 - **코드베이스 전체의 변이 테스트:** [Stryker](https://stryker-mutator.io/), [mutmut](https://github.com/boxed/mutmut), [PIT](https://pitest.org/)를 쓰세요. `test-and-prove`는 같은 일을 방금 쓴 테스트 하나에 손으로 합니다.
 - **테스트를 먼저 쓰기:** obra의 superpowers에 있는 [`test-driven-development`](https://github.com/obra/superpowers/tree/main/skills/test-driven-development)를 쓰세요. TDD는 코드가 생기기 전에 테스트가 실패하는 것을 봅니다. `test-and-prove`는 코드가 생긴 뒤에 가드를 부숩니다. 그래서 오래된 코드에 붙이는 테스트에도 쓸 수 있습니다.
-- **성공이라고 말하기 전에 증거부터:** obra의 superpowers에 있는 [`verification-before-completion`](https://github.com/obra/superpowers/tree/main/skills/verification-before-completion)이 이 원칙을 넓게 다룹니다. 이 두 스킬은 그 말이 가장 자주 틀리는 두 곳, 테스트와 push를 더 깊게 다룹니다.
+- **성공이라고 말하기 전에 증거부터:** obra의 superpowers에 있는 [`verification-before-completion`](https://github.com/obra/superpowers/tree/main/skills/verification-before-completion)이 이 원칙을 넓게 다룹니다. 이 세 스킬은 그 말이 가장 자주 틀리는 곳, 테스트와 push와 잘못된 종류의 증거에 기댄 상태 보고를 더 깊게 다룹니다.
 - **격리된 작업 공간 만들기:** obra의 superpowers에 있는 [`using-git-worktrees`](https://github.com/obra/superpowers/tree/main/skills/using-git-worktrees)를 쓰세요. `change-integrity`도 worktree를 쓰지만, 할 일은 실제로 무엇이 올라갔는지 확인하는 것입니다.
 
 ## 출처
 
-규칙은 이 스킬의 첫 사용자가 에이전트에게 준 교정에서 나왔습니다. `test-and-prove`의 생각은 변이 테스트입니다. `change-integrity`는 명령 근거로 git 공식 문서를 링크합니다.
+규칙은 이 스킬의 첫 사용자가 에이전트에게 준 교정에서 나왔습니다. `test-and-prove`의 생각은 변이 테스트입니다. `change-integrity`는 명령 근거로 git 공식 문서를 링크합니다. `claim-audit`의 틈은 하나하나가 실제 사고에서 나왔습니다.
 
 ## 라이선스
 
