@@ -56,7 +56,7 @@ remove one guard → run only that test → it must fail → restore the guard
 ```
 
 - If it does not fail, the test guards nothing. Rewrite it.
-- Make the mutation where it cannot leak, and treat restoring as part of the same step. Check that `git diff` is clean afterwards. A mutation left in the code is an incident.
+- Make the mutation where it cannot leak, and treat restoring as part of the same step. Restore with `git restore <file>`, or run the mutation in a throwaway copy of the repo. Leave no backup copies behind, inside the repo or outside it: they outlive the run, and the next person cannot tell which copy is real. Check that `git diff` is clean afterwards. A mutation left in the code is an incident.
 - Break each guard on its own. If you break several at once, you cannot tell which test catches what.
 
 **Trap: reading "nothing ran" as "passed".** If the test filter matches nothing, zero tests run and zero fail. Some runners print a line that looks like a pass, and some exit with code 0. So in a mutation run, **always read the run count.**
