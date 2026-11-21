@@ -1,7 +1,7 @@
 {
   "name": "solo-agent-guards",
-  "version": "0.1.0",
-  "description": "Stop a coding agent from saying \"done\" when it isn't: prove the test catches the bug, and prove the push landed.",
+  "version": "0.2.0",
+  "description": "Stop a coding agent from saying \"done\" when it isn't: prove the test catches the bug, prove the push landed, and prove each status claim.",
   "author": {
     "name": "Rob"
   },
