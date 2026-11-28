@@ -1,14 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "solo-agent-guards",
-  "description": "Guards for running a coding agent alone: prove the test catches the bug, prove the push landed, prove each status claim, and check the finish line before saying done.",
+  "description": "Guards for running a coding agent alone: prove the test catches the bug, prove the push landed, prove each status claim, check the finish line, and keep decisions where the next session reads them.",
   "owner": {
     "name": "Rob"
   },
   "plugins": [
     {
       "name": "solo-agent-guards",
-      "description": "test-and-prove breaks the guard to show a test catches it. change-integrity checks that only your changes went up and actually landed. claim-audit checks that each status claim rests on the evidence its verb needs. done-checklist writes the finish line first, turns corrections into a checklist, and runs both before reporting done.",
+      "description": "test-and-prove breaks the guard to show a test catches it. change-integrity checks that only your changes went up and actually landed. claim-audit checks that each status claim rests on the evidence its verb needs. done-checklist writes the finish line first, turns corrections into a checklist, and runs both before reporting done. decision-ledger writes project decisions to DECISIONS.md and reads them, and the original spec, before work starts.",
       "source": "./",
       "category": "productivity"
     }
