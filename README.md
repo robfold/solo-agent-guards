@@ -11,6 +11,7 @@ Agent skills that stop a coding agent from saying "done" when it isn't. For peop
 - **[`test-and-prove`](skills/test-and-prove/SKILL.md): a passing test proves nothing yet.** The agent removes the guard the test protects, runs only that test, sees it fail, and restores the guard. A test that stays green guards nothing and gets rewritten. The agent reads the run count, not the exit code: `go test -run X` and `jest -t X` exit with 0 when nothing ran.
 - **[`change-integrity`](skills/change-integrity/SKILL.md): a successful push proves nothing yet.** The agent checks the remote SHA, the three-dot diff from the base, and what the PR or MR really contains. It stages only its own paths and leaves other sessions' unfinished work alone.
 - **[`claim-audit`](skills/claim-audit/SKILL.md): a success message proves nothing yet.** Before the agent reports "merged", "deployed", "passed", "running in production", or a result number, it re-reads the target and closes four gaps: a merge that is only scheduled, a check that has never failed, a number padded with its own test traffic, and a manual run reported as production. Before it takes over someone else's work, it reads the reviewer's last verdict, not the card's status.
+- **[`done-checklist`](skills/done-checklist/SKILL.md): "done" waits for a finish line and a checklist.** The agent writes the finish line before it starts, each condition with its check. Every time you correct it ("did you check?", "you missed it again"), it adds one line, for the kind of miss, to the repository's checklist. Before it says "done", it runs both and reports a pass/fail table.
 
 ## What it looks like
 
@@ -53,9 +54,9 @@ Or copy the folders in [`skills/`](skills/) into your agent's skills folder (`~/
 
 ## Use
 
-The skills load on their own when the request matches. `test-and-prove` loads when you ask for tests, coverage, or a flaky-test fix. `change-integrity` loads when you ask the agent to commit, push, or open a PR or MR. `claim-audit` loads right before the agent reports a status or a result number, and when you ask "is that real?". You can also call any of them by name: "write tests for the refund check and prove them".
+The skills load on their own when the request matches. `test-and-prove` loads when you ask for tests, coverage, or a flaky-test fix. `change-integrity` loads when you ask the agent to commit, push, or open a PR or MR. `claim-audit` loads right before the agent reports a status or a result number, and when you ask "is that real?". `done-checklist` loads when you hand over work and ask for a finish line, when you ask "did you check?" or point out a miss, and right before the agent reports "done". You can also call any of them by name: "write tests for the refund check and prove them".
 
-`test-and-prove` ends with numbers as the runner printed them, plus the mutation result for each new test. `change-integrity` ends with the remote SHA and the diff the PR or MR really contains. `claim-audit` ends with each claim next to the evidence it was re-read from, or a note that it could not be.
+`test-and-prove` ends with numbers as the runner printed them, plus the mutation result for each new test. `change-integrity` ends with the remote SHA and the diff the PR or MR really contains. `claim-audit` ends with each claim next to the evidence it was re-read from, or a note that it could not be. `done-checklist` ends with a table of every finish-line condition and checklist line, with pass, fail, or not checked, and its evidence.
 
 ## When to use something else
 
