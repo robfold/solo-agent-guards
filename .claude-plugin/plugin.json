@@ -1,7 +1,7 @@
 {
   "name": "solo-agent-guards",
-  "version": "0.3.0",
-  "description": "Stop a coding agent from saying \"done\" when it isn't: prove the test catches the bug, prove the push landed, prove each status claim, and check the finish line before reporting.",
+  "version": "0.4.0",
+  "description": "Stop a coding agent from saying \"done\" when it isn't: prove the test catches the bug, prove the push landed, prove each status claim, check the finish line before reporting, and keep project decisions in a ledger the next session reads.",
   "author": {
     "name": "Rob"
   },
